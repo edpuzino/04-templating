@@ -5,28 +5,43 @@ let articleView = {};
 // TODO: Where possible, refactor methods into arrow functions, including the document.ready() method at the bottom.
 
 // COMMENT: How do arrow functions affect the context of "this"? How did you determine if a function could be refactored?
-// PUT YOUR RESPONSE HERE
+// Arrow functions do not create their own scope for a new this value. Any this value will pertain to the parent scope of the arrow function, which in this case would be the global scope. OTHER NOTES: Removed if statement that checked for class=template
 
-articleView.populateFilters = function() {
+// articleView.populateFilters = function() {
+//   $('article').each(function() {
+//     let val = $(this).find('address a').text();
+//     let optionTag = `<option value="${val}">${val}</option>`;
+
+//     if ($(`#author-filter option[value="${val}"]`).length === 0) {
+//       $('#author-filter').append(optionTag);
+//     }
+
+//     val = $(this).attr('data-category');
+//     optionTag = `<option value="${val}">${val}</option>`;
+//     if ($(`#category-filter option[value="${val}"]`).length === 0) {
+//       $('#category-filter').append(optionTag);
+//     }
+//   });
+// };
+
+articleView.populateFilters = () => {
   $('article').each(function() {
-    if (!$(this).hasClass('template')) {
-      let val = $(this).find('address a').text();
-      let optionTag = `<option value="${val}">${val}</option>`;
+    let val = $(this).find('address a').text();
+    let optionTag = `<option value="${val}">${val}</option>`;
 
-      if ($(`#author-filter option[value="${val}"]`).length === 0) {
-        $('#author-filter').append(optionTag);
-      }
+    if ($(`#author-filter option[value="${val}"]`).length === 0) {
+      $('#author-filter').append(optionTag);
+    }
 
-      val = $(this).attr('data-category');
-      optionTag = `<option value="${val}">${val}</option>`;
-      if ($(`#category-filter option[value="${val}"]`).length === 0) {
-        $('#category-filter').append(optionTag);
-      }
+    val = $(this).attr('data-category');
+    optionTag = `<option value="${val}">${val}</option>`;
+    if ($(`#category-filter option[value="${val}"]`).length === 0) {
+      $('#category-filter').append(optionTag);
     }
   });
-};
+}
 
-articleView.handleAuthorFilter = function() {
+articleView.handleAuthorFilter = () =>
   $('#author-filter').on('change', function() {
     if ($(this).val()) {
       $('article').hide();
@@ -37,9 +52,8 @@ articleView.handleAuthorFilter = function() {
     }
     $('#category-filter').val('');
   });
-};
 
-articleView.handleCategoryFilter = function() {
+articleView.handleCategoryFilter = () =>
   $('#category-filter').on('change', function() {
     if ($(this).val()) {
       $('article').hide();
@@ -50,36 +64,33 @@ articleView.handleCategoryFilter = function() {
     }
     $('#author-filter').val('');
   });
-};
 
-articleView.handleMainNav = function() {
+articleView.handleMainNav = () =>
   $('nav').on('click', '.tab', function(e) {
     e.preventDefault();
     $('.tab-content').hide();
     $(`#${$(this).data('content')}`).fadeIn();
   });
 
-  $('nav .tab:first').click();
-};
+$('nav .tab:first').click();
 
-articleView.setTeasers = function() {
+articleView.setTeasers = () =>
   $('.article-body *:nth-of-type(n+2)').hide();
-  $('article').on('click', 'a.read-on', function(e) {
-    e.preventDefault();
-    if ($(this).text() === 'Read on →') {
-      $(this).parent().find('*').fadeIn();
-      $(this).html('Show Less &larr;');
-    } else {
-      $('body').animate({
-        scrollTop: ($(this).parent().offset().top)
-      },200);
-      $(this).html('Read on &rarr;');
-      $(this).parent().find('.article-body *:nth-of-type(n+2)').hide();
-    }
-  });
-};
+$('article').on('click', 'a.read-on', function(e) {
+  e.preventDefault();
+  if ($(this).text() === 'Read on →') {
+    $(this).parent().find('*').fadeIn();
+    $(this).html('Show Less &larr;');
+  } else {
+    $('body').animate({
+      scrollTop: ($(this).parent().offset().top)
+    },200);
+    $(this).html('Read on &rarr;');
+    $(this).parent().find('.article-body *:nth-of-type(n+2)').hide();
+  }
+});
 
-$(document).ready(function() {
+$(document).ready(() => {
   articleView.populateFilters();
   articleView.handleCategoryFilter();
   articleView.handleAuthorFilter();
